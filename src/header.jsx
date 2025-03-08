@@ -4,35 +4,40 @@ import { useState, useEffect } from "react";
 export default function StateWise() {
   const [toDo, setToDo] = useState([]);
 
-  const [input,setInput] = useState("")
+  const [input, setInput] = useState("");
 
-  
-//   let name = e.target.value
-  
+  //   let name = e.target.value
+
   const handleOnChange = (e) => {
-        // console.log(e.target.value)
-        e.preventDefault()
-        setInput(e.target.value)
-
-        
-  }
-//   console.log(`Input of List: ${input}`);
-
-const addToDo = (e) => {
-        // console.log(input);
-        e.preventDefault()
-        setToDo((prev) => [...prev,input] )
-        console.log(input);
-        
-    }
-    
+    // console.log(e.target.value)
+    e.preventDefault();
+    setInput(e.target.value);
+  };
+  //   console.log(`Input of List: ${input}`);
+  const handleSelected = (item) => {
+    const toDoVariable = toDo.map((toDoItem) => {
+      if (toDoItem.content == item.content) {
+        toDoItem.isSelected = !toDoItem.isSelected;
+      }
+      return toDoItem;
+    });
+    setToDo(toDoVariable);
     console.log(toDo);
+  };
 
-      
+  const addToDo = (e) => {
+    // console.log(input);
+    e.preventDefault();
+    setToDo((prev) => [...prev, { content: input, isSelected: false }]);
+    console.log(input);
+  };
 
-        // const [check,setCheck] = useState()
+  const handleDelete = () => {
+    const filterArray = toDo.filter((item) => item.isSelected == !true);
+    // console.log(filterArray);
 
-
+    setToDo(filterArray);
+  };
 
   return (
     <>
@@ -51,20 +56,20 @@ const addToDo = (e) => {
               <label className="text-sm text-gray-600">Add a new task</label>
               <div className="flex mt-2 gap-2">
                 <input
-                onChange={handleOnChange}
-                
+                  onChange={handleOnChange}
                   type="text"
                   className="p-2 border rounded-md w-full focus:outline-none focus:ring-2 h-10 focus:ring-blue-500"
                   placeholder="Enter task..."
                 />
-                <button 
-                onClick={addToDo}
-                className="bg-blue-700 h-10  text-white p-1 text-xs rounded-md hover:bg-blue-800">
+                <button
+                  onClick={addToDo}
+                  className="bg-blue-700 h-10  text-white p-1 text-xs rounded-md hover:bg-blue-800"
+                >
                   Add Todo
                 </button>
               </div>
             </div>
-                        {/* {
+            {/* {
                             toDo.map((item) => {
                             
                                 return (
@@ -78,11 +83,28 @@ const addToDo = (e) => {
                             })
                         } */}
 
-                        { toDo.map((item) => (<div key={item} className=" font-bold pl-7"><input onClick={(e) => console.log(e.checked)} type="checkbox"/>{item}</div>))}
+            {toDo.map((item) => (
+              <div key={item.content} className=" font-bold pl-7">
+                <input
+                  onClick={(e) => {
+                    handleSelected(item);
+                  }}
+                  type="checkbox"
+                />{" "}
+                {item.content}
+              </div>
+            ))}
 
+            {/* {
+                      toDo.map((item) => {console.log(item);
+                      })
+                    } */}
 
             <div className="p-5">
-              <button  className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600">
+              <button
+                onClick={handleDelete}
+                className="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
+              >
                 Delete Selected
               </button>
             </div>
